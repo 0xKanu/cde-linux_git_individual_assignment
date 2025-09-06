@@ -6,7 +6,7 @@ mkdir -p raw
 
 filepath="raw/$(basename "$URL")"
 
-curl -o "$filepath" "$URL"
+curl -L -o "$filepath" "$URL"
 
 if [ -f "$filepath" ]; then
 	echo "File successfully saved in $filepath"
