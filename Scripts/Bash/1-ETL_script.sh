@@ -7,7 +7,7 @@ mkdir -p raw
 
 rawfilepath="raw/$(basename "$URL")"
 
-curl -L -o "$Rawfilepath" "$URL"
+curl -L -o "$rawfilepath" "$URL"
 
 if [ -f "$rawfilepath" ]; then
 	echo "File successfully saved in $rawfilepath"
@@ -30,7 +30,6 @@ value_pos=$(echo "$new_header" | tr ',' '\n' | grep -nx "Value" | cut -d':' -f1)
 units_pos=$(echo "$new_header" | tr ',' '\n' | grep -nx "Units" | cut -d':' -f1)
 var_pos=$(echo "$new_header" | tr ',' '\n' | grep -nx "variable_code" | cut -d':' -f1)
 
-echo $year_pos
 
 echo $new_header | cut -d ',' -f ${year_pos},${value_pos},${units_pos},${var_pos} > "$transformed_file"
 tail -n +2 "$rawfilepath" | cut -d ',' -f ${year_pos},${value_pos},${units_pos},${var_pos} >> "$transformed_file"
@@ -41,4 +40,19 @@ if [[ -f "$transformed_file" ]]; then
 else
 	echo "Transformation failed."
 	exit 1
-fi	
+fi
+
+# LOAD
+
+mkdir -p Gold
+
+cp $transformed_file Gold
+
+loaded_file="./Gold/2023_year_finance.csv"
+
+if [[ -f "$loaded_file" ]]; then
+	echo "Loaded successfully to $loaded_file ."
+else
+	echo "Loading Unsuccessful."
+	exit 1
+fi
